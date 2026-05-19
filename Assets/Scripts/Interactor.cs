@@ -1,10 +1,13 @@
 using UnityEngine;
+using TMPro;
 
 public class Interactor : MonoBehaviour
 {
     public float interactDistance = 3f;
 
     public LayerMask interactLayer;
+
+    public GameObject interactText;
 
     HighlightInteractable currentHighlight;
 
@@ -29,7 +32,9 @@ public class Interactor : MonoBehaviour
             currentHighlight = null;
         }
 
-        // HIGHLIGHT
+        interactText.SetActive(false);
+
+        // HIT
         if (hitSomething)
         {
             HighlightInteractable highlight =
@@ -40,17 +45,15 @@ public class Interactor : MonoBehaviour
                 highlight.Highlight();
                 currentHighlight = highlight;
             }
-        }
 
-        // INTERAÇÃO
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (hitSomething)
+            IInteractable interactable =
+                hit.collider.GetComponentInParent<IInteractable>();
+
+            if (interactable != null)
             {
-                IInteractable interactable =
-                    hit.collider.GetComponentInParent<IInteractable>();
+                interactText.SetActive(true);
 
-                if (interactable != null)
+                if (Input.GetMouseButtonDown(0))
                 {
                     interactable.Interact();
                 }
